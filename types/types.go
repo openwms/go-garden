@@ -2,23 +2,29 @@ package types
 
 // Capture defines the data set send to ThingsSpeak
 type Capture struct {
-	input  Inputs
-	output Outputs
+	Input  Inputs
+	Output Outputs
+}
+
+type TS struct {
+	Field1  string
+	Field2  string
+	Api_key string
 }
 
 // Inputs defines all possible input signals
 type Inputs struct {
-	temperature int
-	brightness  int
-	moisture    int
-	flowRate    int
-	sonic       int
+	Temperature int
+	Brightness  int
+	Moisture    int
+	FlowRate    int
+	Sonic       int
 }
 
 // Outputs defines all possible output signals
 type Outputs struct {
-	mainValve     bool
-	fontaineValve bool
-	spinklerValve bool
-	fontaine      bool
+	MainValve     bool
+	FontaineValve bool
+	SpinklerValve bool
+	Fontaine      bool
 }
