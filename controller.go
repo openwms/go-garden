@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/openwms/go-garden/types"
+	rpio "github.com/stianeikeland/go-rpio"
 )
 
 const (
@@ -28,6 +29,24 @@ var (
 	info    *log.Logger
 	warning *log.Logger
 	error   *log.Logger
+
+	// Inputs
+	fillLevel   = rpio.Pin(12)
+	temperature = rpio.Pin(14)
+	brightness  = rpio.Pin(40)
+	wetness     = rpio.Pin(42)
+	flowRate    = rpio.Pin(45)
+
+	// Outputs
+	mainValve    = rpio.Pin(9)
+	sprinkler    = rpio.Pin(10)
+	fillFountain = rpio.Pin(11)
+	pump         = rpio.Pin(13)
+	ledLights    = rpio.Pin(15)
+
+	// Virtual Outputs
+	errorFillingFountain = false
+	errorSprinkling      = false
 )
 
 func init() {
@@ -95,9 +114,24 @@ func writeOutput(output types.Outputs) {
 }
 
 func main() {
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	// Unmap gpio memory when done
+	defer rpio.Close()
+
+	// Set pin to output mode
+	sprinkler.Output()
+
+	// Toggle pin 20 times
+	for x := 0; x < 20; x++ {
+		sprinkler.Toggle()
+		time.Sleep(time.Second / 5)
+	}
+
 	cnt := 1
 	for {
-		//		embd.LEDToggle("LED0")
 		inputs := readInputs()
 
 		outputs := process(inputs)
