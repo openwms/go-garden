@@ -119,6 +119,8 @@ func sendData(capture types.Capture) {
 	data.Add("field2", strconv.Itoa(capture.Input.Wetness))
 	data.Add("field3", strconv.Itoa(capture.Input.FillLevel))
 	data.Add("field4", strconv.Itoa(capture.Input.Brightness))
+	data.Add("field7", strconv.Itoa(1))
+	data.Add("field8", strconv.Itoa(1))
 	req, _ := http.NewRequest("POST", apiURL, strings.NewReader(data.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
 	req.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
