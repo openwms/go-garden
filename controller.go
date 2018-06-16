@@ -124,12 +124,6 @@ func main() {
 	// Set pin to output mode
 	sprinkler.Output()
 
-	// Toggle pin 20 times
-	for x := 0; x < 20; x++ {
-		sprinkler.Toggle()
-		time.Sleep(time.Second / 5)
-	}
-
 	cnt := 1
 	for {
 		inputs := readInputs()
@@ -137,6 +131,8 @@ func main() {
 		outputs := process(inputs)
 
 		writeOutput(outputs)
+
+		sprinkler.Toggle()
 
 		if cnt%thingsSpeakInterval == 0 {
 			sendData(types.Capture{Input: inputs, Output: outputs})
