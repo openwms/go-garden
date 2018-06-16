@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -19,6 +20,7 @@ import (
 
 const (
 	apiURL              = "https://api.thingspeak.com/update.json"
+	apiReadURL          = "https://api.thingspeak.com/channels/507346/feeds.json"
 	thingsSpeakInterval = 40
 )
 
@@ -31,18 +33,23 @@ var (
 	error   *log.Logger
 
 	// Inputs
-	fillLevel   = rpio.Pin(12)
-	temperature = rpio.Pin(14)
-	brightness  = rpio.Pin(40)
-	wetness     = rpio.Pin(42)
-	flowRate    = rpio.Pin(45)
+	fillLevel   = rpio.Pin(12) //pwd
+	temperature = rpio.Pin(13) //pwd
+	brightness  = rpio.Pin(40) //pwd
+	wetness     = rpio.Pin(41) //pwd
+	flowRate    = rpio.Pin(45) //pwd
+
+	// Virtual Inputs
+	pumpOn      = false
+	mainValveOn = false
+	sprinklerOn = false
 
 	// Outputs
-	mainValve    = rpio.Pin(9)
-	sprinkler    = rpio.Pin(10)
-	fillFountain = rpio.Pin(11)
-	pump         = rpio.Pin(13)
-	ledLights    = rpio.Pin(15)
+	mainValve    = rpio.Pin(4)
+	sprinkler    = rpio.Pin(5)
+	fillFountain = rpio.Pin(6)
+	pump         = rpio.Pin(7)
+	ledLights    = rpio.Pin(8)
 
 	// Virtual Outputs
 	errorFillingFountain = false
@@ -52,6 +59,7 @@ var (
 func init() {
 	fmt.Printf("Initializing...\n")
 	initLoggers(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
+	initGpio()
 }
 
 func initLoggers(
@@ -77,6 +85,28 @@ func initLoggers(
 		log.Ldate|log.Ltime|log.Lshortfile)
 }
 
+func initGpio() {
+	fillLevel.Mode(rpio.Pwm)
+	fillLevel.Freq(64000)
+	fillLevel.DutyCycle(0, 32)
+
+	temperature.Mode(rpio.Pwm)
+	temperature.Freq(64000)
+	temperature.DutyCycle(0, 32)
+
+	brightness.Mode(rpio.Pwm)
+	brightness.Freq(64000)
+	brightness.DutyCycle(0, 32)
+
+	wetness.Mode(rpio.Pwm)
+	wetness.Freq(64000)
+	wetness.DutyCycle(0, 32)
+
+	flowRate.Mode(rpio.Pwm)
+	flowRate.Freq(64000)
+	flowRate.DutyCycle(0, 32)
+}
+
 // Send the data c to the ThingSpeak API
 func sendData(capture types.Capture) {
 	info.Println(">> Send Data", capture)
@@ -85,8 +115,8 @@ func sendData(capture types.Capture) {
 	data := url.Values{}
 	data.Set("api_key", apiKey)
 	data.Add("field1", strconv.Itoa(capture.Input.Temperature))
-	data.Add("field2", strconv.Itoa(capture.Input.Moisture))
-	data.Add("field3", strconv.Itoa(capture.Input.Sonic))
+	data.Add("field2", strconv.Itoa(capture.Input.Wetness))
+	data.Add("field3", strconv.Itoa(capture.Input.FillLevel))
 	data.Add("field4", strconv.Itoa(capture.Input.Brightness))
 	req, _ := http.NewRequest("POST", apiURL, strings.NewReader(data.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
@@ -97,9 +127,41 @@ func sendData(capture types.Capture) {
 	trace.Println(resp)
 }
 
+func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
+	info.Println(">> Read Virtual Inputs")
+
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	req, _ := http.NewRequest("GET", apiReadURL, nil)
+	req = req.WithContext(ctx)
+	q := req.URL.Query()
+	q.Add("api_key", apiKey)
+	q.Add("results", "1")
+	req.URL.RawQuery = q.Encode()
+
+	resp, _ := http.DefaultClient.Do(req)
+	body, readErr := ioutil.ReadAll(resp.Body)
+	if readErr != nil {
+		log.Fatal(readErr)
+	}
+
+	ts := types.ThingSpeakQuery{}
+	jsonErr := json.Unmarshal(body, &ts)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+
+	trace.Println(ts)
+	f1 := false
+	f2 := false
+	f1, _ = strconv.ParseBool(ts.Feeds[0].Field1)
+	f2, _ = strconv.ParseBool(ts.Feeds[0].Field2)
+	return f1, f2
+}
+
 func readInputs() (d types.Inputs) {
 	trace.Println("> Read Inputs")
-	res := types.Inputs{Temperature: 1, Brightness: 2, Moisture: 3, FlowRate: 4, Sonic: 5}
+	pumpOn, sprinklerOn = readVirtualInputs()
+	res := types.Inputs{Temperature: int(temperature.Read()), Brightness: int(brightness), Wetness: int(wetness), FlowRate: int(flowRate), FillLevel: int(fillLevel), PumpOn: pumpOn, SprinklerOn: sprinklerOn}
 	return res
 }
 

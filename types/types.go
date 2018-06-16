@@ -12,13 +12,32 @@ type TS struct {
 	Api_key string
 }
 
+// Feed is a single entry in ThingSpeak API
+type Feed struct {
+	Field1 string
+	Field2 string
+	Field3 string
+	Field4 string
+	Field5 string
+	Field6 string
+	Field7 string
+	Field8 string
+}
+
+// ThingSpeakQuery is a query to ThingSpeak API
+type ThingSpeakQuery struct {
+	Feeds []Feed
+}
+
 // Inputs defines all possible input signals
 type Inputs struct {
 	Temperature int
 	Brightness  int
-	Moisture    int
+	Wetness     int
 	FlowRate    int
-	Sonic       int
+	FillLevel   int
+	PumpOn      bool
+	SprinklerOn bool
 }
 
 // Outputs defines all possible output signals
