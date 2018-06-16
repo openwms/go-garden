@@ -169,7 +169,13 @@ func readInputs() (d types.Inputs) {
 func process(inputs types.Inputs) (outputs types.Outputs) {
 	trace.Println("  Process Inputs")
 
-	return types.Outputs{false, false, false, false}
+	output := types.Outputs{}
+	if inputs.PumpOn {
+		output.Fontaine = true
+	}
+
+	info.Println("Calculated output: ", output)
+	return output
 }
 
 func writeOutput(output types.Outputs) {
