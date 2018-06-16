@@ -154,8 +154,8 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
 	trace.Println(ts, req)
 	f1 := false
 	f2 := false
-	f1, _ = strconv.ParseBool(ts.Feeds[0].Field1)
-	f2, _ = strconv.ParseBool(ts.Feeds[0].Field2)
+	f1, _ = strconv.ParseBool(ts.Feeds[0].Field7)
+	f2, _ = strconv.ParseBool(ts.Feeds[0].Field8)
 	trace.Println(f1, f2)
 	return f1, f2
 }
