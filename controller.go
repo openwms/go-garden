@@ -132,7 +132,7 @@ func sendData(capture types.Capture) {
 }
 
 func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
-	info.Println(">> Read Virtual Inputs")
+	trace.Println(">> Read Virtual Inputs")
 
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 	req, _ := http.NewRequest("GET", apiReadURL, nil)
@@ -185,6 +185,11 @@ func process(inputs types.Inputs) (outputs types.Outputs) {
 
 func writeOutput(output types.Outputs) {
 	trace.Println("< Write Outputs", output)
+	if output.SpinklerValve {
+		sprinkler.PullUp()
+	} else {
+		sprinkler.PullDown()
+	}
 }
 
 func initializePins() {
