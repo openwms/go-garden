@@ -188,6 +188,7 @@ func writeOutput(output types.Outputs) {
 }
 
 func initializePins() {
+	wetness.Input()
 	mainValve.Output()
 	fillFountain.Output()
 	pump.Output()
