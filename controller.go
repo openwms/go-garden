@@ -36,7 +36,7 @@ var (
 	fillLevel   = rpio.Pin(12) //pwd
 	temperature = rpio.Pin(13) //pwd
 	brightness  = rpio.Pin(40) //pwd
-	wetness     = rpio.Pin(41) //pwd
+	wetness     = rpio.Pin(10) //pwd
 	flowRate    = rpio.Pin(45) //pwd
 
 	// Virtual Inputs
