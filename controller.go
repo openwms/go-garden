@@ -166,6 +166,7 @@ func readInputs() (d types.Inputs) {
 	trace.Println("> Read Inputs")
 	pumpOn, sprinklerOn = readVirtualInputs()
 	res := types.Inputs{Temperature: int(temperature.Read()), Brightness: int(brightness), Wetness: int(wetness), FlowRate: int(flowRate), FillLevel: int(fillLevel), PumpOn: pumpOn, SprinklerOn: sprinklerOn}
+	info.Println("Working with inputs: ", res)
 	return res
 }
 
