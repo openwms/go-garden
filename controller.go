@@ -184,12 +184,13 @@ func process(inputs types.Inputs) (outputs types.Outputs) {
 }
 
 func writeOutput(output types.Outputs) {
-	trace.Println("< Write Outputs", output)
+	trace.Println("< Write Outputs")
 	if output.SpinklerValve {
 		sprinkler.PullUp()
 	} else {
 		sprinkler.PullDown()
 	}
+	info.Println("Write Output: ", output)
 }
 
 func initializePins() {
