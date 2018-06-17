@@ -99,7 +99,8 @@ func initGpio() {
 	//	brightness.Freq(64000)
 	//	brightness.DutyCycle(0, 32)
 
-	wetness.Mode(rpio.Pwm)
+	wetness.Input()
+	//wetness.Mode(rpio.Pwm)
 	//	wetness.Freq(64000)
 	//	wetness.DutyCycle(0, 32)
 
@@ -186,6 +187,14 @@ func writeOutput(output types.Outputs) {
 	trace.Println("< Write Outputs", output)
 }
 
+func initializePins() {
+	mainValve.Output()
+	fillFountain.Output()
+	pump.Output()
+	ledLights.Output()
+	sprinkler.Output()
+}
+
 func main() {
 	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
@@ -194,8 +203,7 @@ func main() {
 	// Unmap gpio memory when done
 	defer rpio.Close()
 
-	// Set pin to output mode
-	sprinkler.Output()
+	initializePins()
 
 	cnt := 1
 	for {
