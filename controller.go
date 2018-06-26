@@ -34,7 +34,7 @@ var (
 
 	// Inputs
 	fillLevel   = rpio.Pin(12) //pwd
-	temperature = rpio.Pin(13) //pwd
+	temperature = rpio.Pin(4)  //pwd
 	brightness  = rpio.Pin(40) //pwd
 	wetness     = rpio.Pin(10) //pwd
 	flowRate    = rpio.Pin(45) //pwd
@@ -45,11 +45,11 @@ var (
 	sprinklerOn = false
 
 	// Outputs
-	mainValve    = rpio.Pin(4)
-	sprinkler    = rpio.Pin(5)
-	fillFountain = rpio.Pin(6)
-	pump         = rpio.Pin(7)
-	ledLights    = rpio.Pin(8)
+	mainValve    = rpio.Pin(17) //IN1 (Relais 1)
+	sprinkler    = rpio.Pin(27) //IN2
+	fillFountain = rpio.Pin(22) //IN3
+	pump         = rpio.Pin(23) //IN4
+	ledLights    = rpio.Pin(24) //IN5
 
 	// Virtual Outputs
 	errorFillingFountain = false
@@ -166,7 +166,14 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
 func readInputs() (d types.Inputs) {
 	trace.Println("> Read Inputs")
 	pumpOn, sprinklerOn = readVirtualInputs()
-	res := types.Inputs{Temperature: int(temperature.Read()), Brightness: int(brightness.Read()), Wetness: int(wetness.Read()), FlowRate: int(flowRate.Read()), FillLevel: int(fillLevel.Read()), PumpOn: pumpOn, SprinklerOn: sprinklerOn}
+	res := types.Inputs{
+		Temperature: int(temperature.Read()),
+		Brightness:  int(brightness.Read()),
+		Wetness:     int(wetness.Read()),
+		FlowRate:    int(flowRate.Read()),
+		FillLevel:   int(fillLevel.Read()),
+		PumpOn:      pumpOn,
+		SprinklerOn: sprinklerOn}
 	info.Println("Working with inputs: ", res)
 	return res
 }
@@ -189,6 +196,11 @@ func writeOutput(output types.Outputs) {
 		sprinkler.PullUp()
 	} else {
 		sprinkler.PullDown()
+	}
+	if output.Fontaine {
+		pump.PullUp()
+	} else {
+		pump.PullDown()
 	}
 	info.Println("Write Output: ", output)
 }
