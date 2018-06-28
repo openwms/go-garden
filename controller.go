@@ -111,7 +111,7 @@ func initGpio() {
 }
 
 func boolToa(in bool) string {
-	if bool {
+	if in {
 		return "1"
 	}
 	return "0"
