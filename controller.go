@@ -121,7 +121,7 @@ func boolToa(in bool) string {
 func sendData(capture types.Capture) {
 	info.Println(">> Send Data", capture)
 
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)
 	data := url.Values{}
 	data.Set("api_key", apiKey)
 	data.Add("field1", strconv.Itoa(capture.Input.Temperature))
@@ -197,8 +197,8 @@ func enoughWaterInFontaine(fillLevel int) bool {
 
 func timeForWatering() bool {
 	hour, min, _ := time.Now().Clock()
-	res := (hour == 4 && min == 0) ||
-		(hour == 23 && min == 0)
+	res := (hour == types.StartWateringHours1 && min == types.StartWateringMinutes1) ||
+		(hour == types.StartWateringHours2 && min == types.StartWateringMinutes2)
 	if res {
 		info.Println("Time for watering ", hour, ":", min)
 	}

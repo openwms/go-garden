@@ -1,11 +1,26 @@
 package types
 
+// FontaineFull is the threshold in millimeter from sonic sensor to water surface. Lower values indicate the fontain holds a higher level of water
+const FontaineFull = 300
+
+// DryGround is the treshold that indicates a dry ground. Lower values are more dry than higher values
+const DryGround = 1000
+
+const StartWateringHours1 = 4
+const StartWateringMinutes1 = 0
+const MaxDurationWateringPeriod1 = 300
+
+const StartWateringHours2 = 23
+const StartWateringMinutes2 = 0
+const MaxDurationWateringPeriod2 = 300
+
 // Capture defines the data set send to ThingsSpeak
 type Capture struct {
 	Input  Inputs
 	Output Outputs
 }
 
+// TS is a simple request format to POST ThingSpeak
 type TS struct {
 	Field1  string
 	Field2  string
@@ -28,12 +43,6 @@ type Feed struct {
 type ThingSpeakQuery struct {
 	Feeds []Feed
 }
-
-// FontaineFull is the threshold in millimeter from sonic sensor to water surface. Lower values indicate the fontain holds a higher level of water
-const FontaineFull = 300
-
-// DryGround is the treshold that indicates a dry ground. Lower values are more dry than higher values
-const DryGround = 1000
 
 // Inputs defines all possible input signals
 type Inputs struct {
