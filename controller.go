@@ -134,8 +134,10 @@ func sendData(capture types.Capture) {
 
 func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
 	trace.Println(">> Read Virtual Inputs")
+	f1 := false
+	f2 := false
 
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)
 	req, _ := http.NewRequest("GET", apiReadURL, nil)
 	req = req.WithContext(ctx)
 	q := req.URL.Query()
@@ -144,6 +146,9 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
 	req.URL.RawQuery = q.Encode()
 
 	resp, _ := http.DefaultClient.Do(req)
+	if resp == nil {
+		return f1, f2
+	}
 	body, readErr := ioutil.ReadAll(resp.Body)
 	if readErr != nil {
 		log.Fatal(readErr)
@@ -156,8 +161,6 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
 	}
 
 	trace.Println(ts, req)
-	f1 := false
-	f2 := false
 	f1, _ = strconv.ParseBool(ts.Feeds[0].Field7)
 	f2, _ = strconv.ParseBool(ts.Feeds[0].Field8)
 	trace.Println(f1, f2)
