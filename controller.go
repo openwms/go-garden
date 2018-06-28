@@ -228,6 +228,11 @@ func writeOutput(output types.Outputs) {
 	} else {
 		pump.PullDown()
 	}
+	if output.MainValve {
+		mainValve.PullUp()
+	} else {
+		mainValve.PullDown()
+	}
 	info.Println("Write Output: ", output)
 }
 
