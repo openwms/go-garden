@@ -29,6 +29,12 @@ type ThingSpeakQuery struct {
 	Feeds []Feed
 }
 
+// FontaineFull is the threshold in millimeter from sonic sensor to water surface. Lower values indicate the fontain holds a higher level of water
+const FontaineFull = 300
+
+// DryGround is the treshold that indicates a dry ground. Lower values are more dry than higher values
+const DryGround = 1000
+
 // Inputs defines all possible input signals
 type Inputs struct {
 	Temperature int
@@ -42,8 +48,8 @@ type Inputs struct {
 
 // Outputs defines all possible output signals
 type Outputs struct {
-	MainValve     bool
-	FontaineValve bool
-	SpinklerValve bool
-	Fontaine      bool
+	MainValve      bool
+	FontaineValve  bool
+	SprinklerValve bool
+	Fontaine       bool
 }

@@ -33,11 +33,12 @@ var (
 	error   *log.Logger
 
 	// Inputs
-	fillLevel   = rpio.Pin(12) //pwd
-	temperature = rpio.Pin(4)  //pwd
-	brightness  = rpio.Pin(40) //pwd
-	wetness     = rpio.Pin(10) //pwd
-	flowRate    = rpio.Pin(45) //pwd
+	fillLevel     = rpio.Pin(18) //pwd
+	fillLevelEcho = rpio.Pin(25)
+	temperature   = rpio.Pin(4)  //pwd
+	brightness    = rpio.Pin(40) //pwd
+	wetness       = rpio.Pin(10) //pwd
+	flowRate      = rpio.Pin(45) //pwd
 
 	// Virtual Inputs
 	pumpOn      = false
@@ -178,13 +179,38 @@ func readInputs() (d types.Inputs) {
 	return res
 }
 
+func enoughWaterInFontaine(fillLevel int) bool {
+	return fillLevel < types.FontaineFull
+}
+
+func timeForWatering() bool {
+	/*
+		hour, min, _ := time.Now().Clock()
+		res = (hour == 4 && min == 0) ||
+			(hour == 23 && min == 0)
+		if res {
+			info.Println("Time for watering")
+		}
+	*/
+	return false
+}
+
+func dryGround(wetness int) bool {
+	return wetness < types.DryGround
+}
+
 func process(inputs types.Inputs) (outputs types.Outputs) {
 	trace.Println("  Process Inputs")
 
 	output := types.Outputs{}
-	if inputs.PumpOn {
-		output.Fontaine = true
-	}
+	// Fontaine
+	output.Fontaine = inputs.PumpOn && enoughWaterInFontaine(inputs.FillLevel)
+
+	// sprinkler
+	output.SprinklerValve = inputs.SprinklerOn ||
+		(timeForWatering() && dryGround(inputs.Wetness))
+
+	output.MainValve = output.Fontaine || output.SprinklerValve
 
 	info.Println("Calculated output: ", output)
 	return output
@@ -192,7 +218,7 @@ func process(inputs types.Inputs) (outputs types.Outputs) {
 
 func writeOutput(output types.Outputs) {
 	trace.Println("< Write Outputs")
-	if output.SpinklerValve {
+	if output.SprinklerValve {
 		sprinkler.PullUp()
 	} else {
 		sprinkler.PullDown()
