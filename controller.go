@@ -159,12 +159,14 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
 	body, readErr := ioutil.ReadAll(resp.Body)
 	if readErr != nil {
 		log.Fatal(readErr)
+		return f1, f2
 	}
 
 	ts := types.ThingSpeakQuery{}
 	jsonErr := json.Unmarshal(body, &ts)
 	if jsonErr != nil {
 		log.Fatal(jsonErr)
+		return f1, f2
 	}
 
 	trace.Println(ts, req)
