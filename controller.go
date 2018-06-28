@@ -220,18 +220,24 @@ func writeOutput(output types.Outputs) {
 	trace.Println("< Write Outputs")
 	if output.SprinklerValve {
 		sprinkler.PullUp()
+		info.Println("Sprinkler ON")
 	} else {
 		sprinkler.PullDown()
+		info.Println("Sprinkler OFF")
 	}
 	if output.Fontaine {
 		pump.PullUp()
+		info.Println("Fontaine ON")
 	} else {
 		pump.PullDown()
+		info.Println("Fontaine OFF")
 	}
 	if output.MainValve {
 		mainValve.PullUp()
+		info.Println("Main valve ON")
 	} else {
 		mainValve.PullDown()
+		info.Println("Main valve OFF")
 	}
 	info.Println("Write Output: ", output)
 }
