@@ -59,8 +59,8 @@ var (
 
 func init() {
 	fmt.Printf("Initializing...\n")
-	//initLoggers(os.Stdout, os.Stdout, os.Stdout, os.Stderr)
-	initLoggers(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
+	initLoggers(os.Stdout, os.Stdout, os.Stdout, os.Stderr)
+	//initLoggers(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
 	//initGpio()
 }
 
@@ -194,15 +194,13 @@ func enoughWaterInFontaine(fillLevel int) bool {
 }
 
 func timeForWatering() bool {
-	/*
-		hour, min, _ := time.Now().Clock()
-		res = (hour == 4 && min == 0) ||
-			(hour == 23 && min == 0)
-		if res {
-			info.Println("Time for watering")
-		}
-	*/
-	return false
+	hour, min, _ := time.Now().Clock()
+	res := (hour == 4 && min == 0) ||
+		(hour == 23 && min == 0)
+	if res {
+		info.Println("Time for watering ", hour, ":", min)
+	}
+	return res
 }
 
 func dryGround(wetness int) bool {
@@ -279,7 +277,7 @@ func main() {
 
 		writeOutput(outputs)
 
-		sprinkler.Toggle()
+		//sprinkler.Toggle()
 
 		if cnt%thingsSpeakInterval == 0 {
 			sendData(types.Capture{Input: inputs, Output: outputs})
