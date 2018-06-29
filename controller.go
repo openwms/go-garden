@@ -41,9 +41,10 @@ var (
 	flowRate      = rpio.Pin(45) //pwd
 
 	// Virtual Inputs
-	pumpOn      = false
-	mainValveOn = false
-	sprinklerOn = false
+	pumpOn            = false
+	mainValveOn       = false
+	sprinklerOn       = false
+	fillFontaineValve = false
 
 	// Outputs
 	mainValve    = rpio.Pin(17) //IN1 (Relais 1)
@@ -128,6 +129,7 @@ func sendData(capture types.Capture) {
 	data.Add("field2", strconv.Itoa(capture.Input.Wetness))
 	data.Add("field3", strconv.Itoa(capture.Input.FillLevel))
 	data.Add("field4", strconv.Itoa(capture.Input.Brightness))
+	data.Add("field6", boolToa(capture.Input.FillFontaineValve))
 	data.Add("field7", boolToa(capture.Input.PumpOn))
 	data.Add("field8", boolToa(capture.Input.SprinklerOn))
 	req, _ := http.NewRequest("POST", apiURL, strings.NewReader(data.Encode()))
@@ -139,10 +141,11 @@ func sendData(capture types.Capture) {
 	trace.Println(resp)
 }
 
-func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
+func readVirtualInputs() (pumpOn bool, sprinklerOn bool, fillFontaine bool) {
 	trace.Println(">> Read Virtual Inputs")
 	f1 := false
 	f2 := false
+	f3 := false
 
 	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)
 	req, _ := http.NewRequest("GET", apiReadURL, nil)
@@ -155,39 +158,41 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		error.Println("Error performing GET: ", err)
-		return f1, f2
+		return f1, f2, f3
 	}
 	defer resp.Body.Close()
 	body, readErr := ioutil.ReadAll(resp.Body)
 	if readErr != nil {
 		error.Println("Error ready response body GET: ", readErr)
-		return f1, f2
+		return f1, f2, f3
 	}
 
 	var ts = new(types.ThingSpeakQuery)
 	jsonErr := json.Unmarshal(body, &ts)
 	if jsonErr != nil {
 		error.Println("Error unmarshalling json response in GET: ", jsonErr)
-		return f1, f2
+		return f1, f2, f3
 	}
 
 	f1, _ = strconv.ParseBool(ts.Feeds[0].Field7)
 	f2, _ = strconv.ParseBool(ts.Feeds[0].Field8)
+	f3, _ = strconv.ParseBool(ts.Feeds[0].Field6)
 	trace.Println("Virtual inputs from API: ", f1, f2)
-	return f1, f2
+	return f1, f2, f3
 }
 
 func readInputs() (d types.Inputs) {
 	trace.Println("> Read Inputs")
-	pumpOn, sprinklerOn = readVirtualInputs()
+	pumpOn, sprinklerOn, fillFontaineValve = readVirtualInputs()
 	res := types.Inputs{
-		Temperature: int(temperature.Read()),
-		Brightness:  int(brightness.Read()),
-		Wetness:     int(wetness.Read()),
-		FlowRate:    int(flowRate.Read()),
-		FillLevel:   int(fillLevel.Read()),
-		PumpOn:      pumpOn,
-		SprinklerOn: sprinklerOn}
+		Temperature:       int(temperature.Read()),
+		Brightness:        int(brightness.Read()),
+		Wetness:           int(wetness.Read()),
+		FlowRate:          int(flowRate.Read()),
+		FillLevel:         int(fillLevel.Read()),
+		PumpOn:            pumpOn,
+		SprinklerOn:       sprinklerOn,
+		FillFontaineValve: fillFontaineValve}
 	info.Println("Working with inputs: ", res)
 	return res
 }
@@ -222,7 +227,7 @@ func process(inputs types.Inputs) (outputs types.Outputs) {
 		(timeForWatering() && dryGround(inputs.Wetness))
 
 	// fill fontaine
-	output.FontaineValve = !enoughWaterInFontaine(inputs.FillLevel)
+	output.FontaineValve = !enoughWaterInFontaine(inputs.FillLevel) || inputs.FillFontaineValve
 
 	// water on the system
 	output.MainValve = output.FontaineValve || output.SprinklerValve
@@ -233,7 +238,7 @@ func process(inputs types.Inputs) (outputs types.Outputs) {
 
 func writeOutput(output types.Outputs) {
 	trace.Println("< Write Outputs")
-	// Relais 1 // IN 1
+	// Relais 1 // IN 1 // Main Valve
 	if output.MainValve {
 		mainValve.High()
 		info.Println("Main valve ON")
@@ -241,7 +246,7 @@ func writeOutput(output types.Outputs) {
 		mainValve.Low()
 		info.Println("Main valve OFF")
 	}
-	// Relais 2 // IN 2
+	// Relais 2 // IN 2 // Sprinkler
 	if output.SprinklerValve {
 		sprinkler.High()
 		info.Println("Sprinkler ON")

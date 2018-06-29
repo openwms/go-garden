@@ -46,13 +46,14 @@ type ThingSpeakQuery struct {
 
 // Inputs defines all possible input signals
 type Inputs struct {
-	Temperature int
-	Brightness  int
-	Wetness     int
-	FlowRate    int
-	FillLevel   int
-	PumpOn      bool
-	SprinklerOn bool
+	Temperature       int
+	Brightness        int
+	Wetness           int
+	FlowRate          int
+	FillLevel         int
+	PumpOn            bool
+	SprinklerOn       bool
+	FillFontaineValve bool
 }
 
 // Outputs defines all possible output signals
