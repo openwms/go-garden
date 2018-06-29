@@ -244,10 +244,10 @@ func writeOutput(output types.Outputs) {
 		info.Println("Fontaine OFF")
 	}
 	if output.MainValve {
-		mainValve.Pull()
+		mainValve.High()
 		info.Println("Main valve ON")
 	} else {
-		mainValve.PullOff()
+		mainValve.Low()
 		info.Println("Main valve OFF")
 	}
 	info.Println("Write Output: ", output)
