@@ -163,13 +163,13 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
 		return f1, f2
 	}
 
-	ts := types.ThingSpeakQuery{}
+	var ts = new(types.ThingSpeakQuery)
 	trace.Println("Before unmarshalling json response", body)
 	jsonErr := json.Unmarshal(body, &ts)
 	trace.Println("After unmarshalling json response")
 	if jsonErr != nil {
-		trace.Println("error unmarshalling json response")
-		log.Fatal(jsonErr)
+		trace.Println("error unmarshalling json response", jsonErr)
+		trace.Println("Returning both")
 		return f1, f2
 	}
 	trace.Println("going on")
@@ -187,6 +187,7 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
 func readInputs() (d types.Inputs) {
 	trace.Println("> Read Inputs")
 	pumpOn, sprinklerOn = readVirtualInputs()
+	trace.Println("returning")
 	res := types.Inputs{
 		Temperature: int(temperature.Read()),
 		Brightness:  int(brightness.Read()),

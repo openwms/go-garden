@@ -29,19 +29,19 @@ type TS struct {
 
 // Feed is a single entry in ThingSpeak API
 type Feed struct {
-	Field1 string
-	Field2 string
-	Field3 string
-	Field4 string
-	Field5 string
-	Field6 string
-	Field7 string
-	Field8 string
+	Field1 string `json:"field1"`
+	Field2 string `json:"field2"`
+	Field3 string `json:"field3"`
+	Field4 string `json:"field4"`
+	Field5 string `json:"field5"`
+	Field6 string `json:"field6"`
+	Field7 string `json:"field7"`
+	Field8 string `json:"field8"`
 }
 
 // ThingSpeakQuery is a query to ThingSpeak API
 type ThingSpeakQuery struct {
-	Feeds []Feed
+	Feeds []Feed `json:"feeds"`
 }
 
 // Inputs defines all possible input signals
