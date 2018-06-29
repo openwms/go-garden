@@ -166,15 +166,20 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
 	ts := types.ThingSpeakQuery{}
 	trace.Println("Before unmarshalling json response", body)
 	jsonErr := json.Unmarshal(body, &ts)
-	trace.Println("After unmarshalling json response", body)
+	trace.Println("After unmarshalling json response")
 	if jsonErr != nil {
+		trace.Println("error unmarshalling json response")
 		log.Fatal(jsonErr)
 		return f1, f2
 	}
+	trace.Println("going on")
 
 	trace.Println(ts, req)
+	trace.Println("going on2")
 	f1, _ = strconv.ParseBool(ts.Feeds[0].Field7)
+	trace.Println("going on3")
 	f2, _ = strconv.ParseBool(ts.Feeds[0].Field8)
+	trace.Println("going on4")
 	trace.Println(f1, f2)
 	return f1, f2
 }
