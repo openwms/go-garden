@@ -221,7 +221,7 @@ func process(inputs types.Inputs) (outputs types.Outputs) {
 	output.SprinklerValve = inputs.SprinklerOn ||
 		(timeForWatering() && dryGround(inputs.Wetness))
 
-	output.MainValve = output.Fontaine || output.SprinklerValve
+	output.MainValve = output.FontaineValve || output.SprinklerValve
 
 	info.Println("Calculated output: ", output)
 	return output
