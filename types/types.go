@@ -6,12 +6,12 @@ const FontaineFull = 300
 // DryGround is the treshold that indicates a dry ground. Lower values are more dry than higher values
 const DryGround = 1000
 
-const StartWateringHours1 = 4
-const StartWateringMinutes1 = 0
+const StartWateringHours1 = 20
+const StartWateringMinutes1 = 15
 const MaxDurationWateringPeriod1 = 300
 
 const StartWateringHours2 = 23
-const StartWateringMinutes2 = 0
+const StartWateringMinutes2 = 00
 const MaxDurationWateringPeriod2 = 300
 
 // Capture defines the data set send to ThingsSpeak
