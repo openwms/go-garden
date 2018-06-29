@@ -154,40 +154,32 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
+		error.Println("Error performing GET: ", err)
 		return f1, f2
 	}
 	defer resp.Body.Close()
 	body, readErr := ioutil.ReadAll(resp.Body)
 	if readErr != nil {
-		log.Fatal(readErr)
+		error.Println("Error ready response body GET: ", readErr)
 		return f1, f2
 	}
 
 	var ts = new(types.ThingSpeakQuery)
-	trace.Println("Before unmarshalling json response", body)
 	jsonErr := json.Unmarshal(body, &ts)
-	trace.Println("After unmarshalling json response")
 	if jsonErr != nil {
-		trace.Println("error unmarshalling json response", jsonErr)
-		trace.Println("Returning both")
+		error.Println("Error unmarshalling json response in GET: ", jsonErr)
 		return f1, f2
 	}
-	trace.Println("going on")
 
-	trace.Println(ts, req)
-	trace.Println("going on2")
 	f1, _ = strconv.ParseBool(ts.Feeds[0].Field7)
-	trace.Println("going on3")
 	f2, _ = strconv.ParseBool(ts.Feeds[0].Field8)
-	trace.Println("going on4")
-	trace.Println(f1, f2)
+	trace.Println("Virtual inputs from API: ", f1, f2)
 	return f1, f2
 }
 
 func readInputs() (d types.Inputs) {
 	trace.Println("> Read Inputs")
 	pumpOn, sprinklerOn = readVirtualInputs()
-	trace.Println("returning")
 	res := types.Inputs{
 		Temperature: int(temperature.Read()),
 		Brightness:  int(brightness.Read()),
