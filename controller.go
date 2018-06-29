@@ -280,7 +280,7 @@ func main() {
 
 		writeOutput(outputs)
 
-		sprinkler.Toggle()
+		mainValve.Toggle()
 
 		if cnt%thingsSpeakInterval == 0 {
 			sendData(types.Capture{Input: inputs, Output: outputs})
