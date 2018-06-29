@@ -237,17 +237,17 @@ func writeOutput(output types.Outputs) {
 		info.Println("Sprinkler OFF")
 	}
 	if output.Fontaine {
-		pump.PullUp()
+		pump.High()
 		info.Println("Fontaine ON")
 	} else {
-		pump.PullDown()
+		pump.Low()
 		info.Println("Fontaine OFF")
 	}
 	if output.MainValve {
-		mainValve.PullUp()
+		mainValve.Pull()
 		info.Println("Main valve ON")
 	} else {
-		mainValve.PullDown()
+		mainValve.PullOff()
 		info.Println("Main valve OFF")
 	}
 	info.Println("Write Output: ", output)
@@ -280,7 +280,7 @@ func main() {
 
 		writeOutput(outputs)
 
-		mainValve.Toggle()
+		//mainValve.Toggle()
 
 		if cnt%thingsSpeakInterval == 0 {
 			sendData(types.Capture{Input: inputs, Output: outputs})
