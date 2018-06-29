@@ -174,10 +174,12 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool, fillFontaine bool) {
 		return f1, f2, f3
 	}
 
-	f1, _ = strconv.ParseBool(ts.Feeds[0].Field7)
-	f2, _ = strconv.ParseBool(ts.Feeds[0].Field8)
-	f3, _ = strconv.ParseBool(ts.Feeds[0].Field6)
-	trace.Println("Virtual inputs from API: ", f1, f2)
+	if ts.Feeds != nil && len(ts.Feeds) > 0 {
+		f1, _ = strconv.ParseBool(ts.Feeds[0].Field7)
+		f2, _ = strconv.ParseBool(ts.Feeds[0].Field8)
+		f3, _ = strconv.ParseBool(ts.Feeds[0].Field6)
+		trace.Println("Virtual inputs from API: ", f1, f2)
+	}
 	return f1, f2, f3
 }
 
