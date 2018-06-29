@@ -221,6 +221,10 @@ func process(inputs types.Inputs) (outputs types.Outputs) {
 	output.SprinklerValve = inputs.SprinklerOn ||
 		(timeForWatering() && dryGround(inputs.Wetness))
 
+	// fill fontaine
+	output.FontaineValve = !enoughWaterInFontaine(inputs.FillLevel)
+
+	// water on the system
 	output.MainValve = output.FontaineValve || output.SprinklerValve
 
 	info.Println("Calculated output: ", output)
@@ -229,6 +233,15 @@ func process(inputs types.Inputs) (outputs types.Outputs) {
 
 func writeOutput(output types.Outputs) {
 	trace.Println("< Write Outputs")
+	// Relais 1 // IN 1
+	if output.MainValve {
+		mainValve.High()
+		info.Println("Main valve ON")
+	} else {
+		mainValve.Low()
+		info.Println("Main valve OFF")
+	}
+	// Relais 2 // IN 2
 	if output.SprinklerValve {
 		sprinkler.High()
 		info.Println("Sprinkler ON")
@@ -236,19 +249,21 @@ func writeOutput(output types.Outputs) {
 		sprinkler.Low()
 		info.Println("Sprinkler OFF")
 	}
+	// Relais 3 // IN 3 // Fill Fontaine
+	if output.FontaineValve {
+		fillFountain.High()
+		info.Println("FillFontaine ON")
+	} else {
+		fillFountain.Low()
+		info.Println("FillFontaine OFF")
+	}
+	// Relais 3 // IN 3 // Pump
 	if output.Fontaine {
 		pump.High()
 		info.Println("Fontaine ON")
 	} else {
 		pump.Low()
 		info.Println("Fontaine OFF")
-	}
-	if output.MainValve {
-		mainValve.High()
-		info.Println("Main valve ON")
-	} else {
-		mainValve.Low()
-		info.Println("Main valve OFF")
 	}
 	info.Println("Write Output: ", output)
 }
