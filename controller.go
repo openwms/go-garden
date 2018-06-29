@@ -230,10 +230,10 @@ func process(inputs types.Inputs) (outputs types.Outputs) {
 func writeOutput(output types.Outputs) {
 	trace.Println("< Write Outputs")
 	if output.SprinklerValve {
-		sprinkler.PullUp()
+		sprinkler.High()
 		info.Println("Sprinkler ON")
 	} else {
-		sprinkler.PullDown()
+		sprinkler.Low()
 		info.Println("Sprinkler OFF")
 	}
 	if output.Fontaine {
