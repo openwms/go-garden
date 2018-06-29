@@ -152,10 +152,11 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
 	q.Add("results", "1")
 	req.URL.RawQuery = q.Encode()
 
-	resp, _ := http.DefaultClient.Do(req)
-	if resp == nil {
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
 		return f1, f2
 	}
+	defer resp.Body.Close()
 	body, readErr := ioutil.ReadAll(resp.Body)
 	if readErr != nil {
 		log.Fatal(readErr)
@@ -163,8 +164,9 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool) {
 	}
 
 	ts := types.ThingSpeakQuery{}
-	trace.Println("Befor unmarshalling json response", body)
+	trace.Println("Before unmarshalling json response", body)
 	jsonErr := json.Unmarshal(body, &ts)
+	trace.Println("After unmarshalling json response", body)
 	if jsonErr != nil {
 		log.Fatal(jsonErr)
 		return f1, f2
