@@ -118,6 +118,13 @@ func boolToa(in bool) string {
 	return "0"
 }
 
+func boolToStr(in bool) string {
+	if in {
+		return "ON"
+	}
+	return "OFF"
+}
+
 // Send the data c to the ThingSpeak API
 func sendData(capture types.Capture) {
 	trace.Println(">> Send Data", capture)
@@ -224,7 +231,7 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 	// Fontaine
 	var fontaine = inputs.PumpOn && enoughWaterInFontaine(inputs.FillLevel)
 	if currentOutput.Fontaine != fontaine {
-		info.Println("Switching Fontaine: ", fontaine)
+		info.Println("Switching Fontaine: ", boolToStr(fontaine))
 	}
 	output.Fontaine = fontaine
 
@@ -232,21 +239,21 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 	var sprinklerValve = inputs.SprinklerOn ||
 		(timeForWatering() && dryGround(inputs.Wetness))
 	if currentOutput.SprinklerValve != sprinklerValve {
-		info.Println("Switching SprinklerValve: ", sprinklerValve)
+		info.Println("Switching SprinklerValve: ", boolToStr(sprinklerValve))
 	}
 	output.SprinklerValve = sprinklerValve
 
 	// fill fontaine
 	var fontaineValve = !enoughWaterInFontaine(inputs.FillLevel) || inputs.FillFontaineValve
 	if currentOutput.FontaineValve != fontaineValve {
-		info.Println("Switching FontaineValve: ", fontaineValve)
+		info.Println("Switching FontaineValve: ", boolToStr(fontaineValve))
 	}
 	output.FontaineValve = fontaineValve
 
 	// water on the system
 	var mainValve = output.FontaineValve || output.SprinklerValve
 	if currentOutput.MainValve != mainValve {
-		info.Println("Switching MainValve: ", mainValve)
+		info.Println("Switching MainValve: ", boolToStr(mainValve))
 	}
 	output.MainValve = mainValve
 
