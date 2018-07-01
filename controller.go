@@ -120,7 +120,7 @@ func boolToa(in bool) string {
 
 // Send the data c to the ThingSpeak API
 func sendData(capture types.Capture) {
-	info.Println(">> Send Data", capture)
+	trace.Println(">> Send Data", capture)
 
 	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)
 	data := url.Values{}
