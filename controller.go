@@ -60,8 +60,8 @@ var (
 
 func init() {
 	fmt.Printf("Initializing...\n")
-	initLoggers(os.Stdout, os.Stdout, os.Stdout, os.Stderr)
-	//initLoggers(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
+	//initLoggers(os.Stdout, os.Stdout, os.Stdout, os.Stderr)
+	initLoggers(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
 	//initGpio()
 }
 
