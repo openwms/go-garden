@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -21,7 +22,7 @@ import (
 const (
 	apiURL              = "https://api.thingspeak.com/update.json"
 	apiReadURL          = "https://api.thingspeak.com/channels/507346/feeds.json"
-	thingsSpeakInterval = 40
+	thingsSpeakInterval = 120
 )
 
 var (
@@ -322,14 +323,15 @@ func main() {
 	for {
 		inputs := readInputs()
 
-		outputs = process(inputs, outputs)
+		var newOutput = process(inputs, outputs)
 
-		writeOutput(outputs)
+		writeOutput(newOutput)
 
-		if cnt%thingsSpeakInterval == 0 {
-			sendData(types.Capture{Input: inputs, Output: outputs})
+		if cnt%thingsSpeakInterval == 0 || !reflect.DeepEqual(newOutput, outputs) {
+			outputs = newOutput
+			sendData(types.Capture{Input: inputs, Output: newOutput})
 		}
 		cnt++
-		time.Sleep(250 * time.Millisecond)
+		time.Sleep(1000 * time.Millisecond)
 	}
 }
