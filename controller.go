@@ -220,7 +220,7 @@ func dryGround(wetness int) bool {
 func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Outputs) {
 	trace.Println("  Process Inputs")
 
-	output := types.Outputs{}
+	var output = types.Outputs{}
 	// Fontaine
 	var fontaine = inputs.PumpOn && enoughWaterInFontaine(inputs.FillLevel)
 	if currentOutput.Fontaine != fontaine {
