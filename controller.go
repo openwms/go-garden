@@ -311,11 +311,11 @@ func main() {
 	initializePins()
 
 	cnt := 1
-	outputs := types.Outputs{}
+	var outputs = types.Outputs{}
 	for {
 		inputs := readInputs()
 
-		outputs := process(inputs, outputs)
+		outputs = process(inputs, outputs)
 
 		writeOutput(outputs)
 
