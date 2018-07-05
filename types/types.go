@@ -46,7 +46,7 @@ type ThingSpeakQuery struct {
 
 // Inputs defines all possible input signals
 type Inputs struct {
-	Temperature       int
+	Temperature       float64
 	Brightness        int
 	Wetness           int
 	FlowRate          int

@@ -133,7 +133,7 @@ func sendData(capture types.Capture) {
 	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)
 	data := url.Values{}
 	data.Set("api_key", apiKey)
-	data.Add("field1", strconv.Itoa(capture.Input.Temperature))
+	data.Add("field1", strconv.FormatFloat(capture.Input.Temperature, 'f', 4, 64))
 	data.Add("field2", strconv.Itoa(capture.Input.Wetness))
 	data.Add("field3", strconv.Itoa(capture.Input.FillLevel))
 	data.Add("field4", strconv.Itoa(capture.Input.Brightness))
@@ -191,11 +191,22 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool, fillFontaine bool) {
 	return f1, f2, f3
 }
 
+func readTemperature() (temp float64) {
+	dat, e := ioutil.ReadFile("/sys/bus/w1/devices/28-0417501596ff")
+	if e != nil {
+		panic(e)
+	}
+	//str := string(dat)
+	tempStr := dat[len(dat)-5 : len(dat)]
+	i, _ := strconv.Atoi(string(tempStr))
+	return float64(i / 1000)
+}
+
 func readInputs() (d types.Inputs) {
 	trace.Println("> Read Inputs")
 	pumpOn, sprinklerOn, fillFontaineValve = readVirtualInputs()
 	res := types.Inputs{
-		Temperature:       int(temperature.Read()),
+		Temperature:       readTemperature(),
 		Brightness:        int(brightness.Read()),
 		Wetness:           int(wetness.Read()),
 		FlowRate:          int(flowRate.Read()),
