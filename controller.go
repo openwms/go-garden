@@ -200,7 +200,7 @@ func readTemperature() (temp float64) {
 	info.Println("str: ", str)
 	tempStr := str[len(str)-6 : len(str)]
 	info.Println("tempStr: ", tempStr)
-	i, _ := strconv.ParseInt(tempStr, 0, 5)
+	i, _ := strconv.ParseInt(tempStr, 0, 64)
 	info.Println("i: ", i)
 	info.Println("temp: ", float64(i/1000))
 	return float64(i / 1000)
