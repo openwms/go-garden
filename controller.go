@@ -192,13 +192,16 @@ func readVirtualInputs() (pumpOn bool, sprinklerOn bool, fillFontaine bool) {
 }
 
 func readTemperature() (temp float64) {
-	dat, e := ioutil.ReadFile("/sys/bus/w1/devices/28-0417501596ff")
+	dat, e := ioutil.ReadFile("/sys/bus/w1/devices/28-0417501596ff/w1_slave")
 	if e != nil {
 		panic(e)
 	}
 	//str := string(dat)
 	tempStr := dat[len(dat)-5 : len(dat)]
+	info.Println("tempStr: ", tempStr)
 	i, _ := strconv.Atoi(string(tempStr))
+	info.Println("i: ", i)
+	info.Println("temp: ", float64(i/1000))
 	return float64(i / 1000)
 }
 
