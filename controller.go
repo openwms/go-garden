@@ -61,8 +61,8 @@ var (
 
 func init() {
 	fmt.Printf("Initializing...\n")
-	//initLoggers(os.Stdout, os.Stdout, os.Stdout, os.Stderr)
-	initLoggers(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
+	initLoggers(os.Stdout, os.Stdout, os.Stdout, os.Stderr)
+	//initLoggers(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
 	//initGpio()
 }
 
@@ -145,6 +145,7 @@ func sendData(capture types.Capture) {
 	req.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 
 	req = req.WithContext(ctx)
+	trace.Println(">> Send Request", req)
 	resp, _ := http.DefaultClient.Do(req)
 	trace.Println(resp)
 }
@@ -198,10 +199,8 @@ func readTemperature() (temp float64) {
 	}
 	str := string(dat)
 	tempStr := str[len(str)-6 : len(str)-1]
-	info.Println("tempStr: ", tempStr)
+	trace.Println("tempStr: ", tempStr)
 	i, _ := strconv.ParseInt(tempStr, 10, 32)
-	fmt.Printf("%d\n", i)
-	fmt.Println("temp: ", float64(i)/float64(1000))
 	return float64(i) / float64(1000)
 }
 
