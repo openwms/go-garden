@@ -196,8 +196,9 @@ func readTemperature() (temp float64) {
 	if e != nil {
 		panic(e)
 	}
-	//str := string(dat)
-	tempStr := dat[len(dat)-5 : len(dat)]
+	str := string(dat)
+	info.Println("str: ", str)
+	tempStr := str[len(str)-5 : len(str)]
 	info.Println("tempStr: ", tempStr)
 	i, _ := strconv.Atoi(string(tempStr))
 	info.Println("i: ", i)
