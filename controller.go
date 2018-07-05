@@ -197,13 +197,12 @@ func readTemperature() (temp float64) {
 		panic(e)
 	}
 	str := string(dat)
-	info.Println("str: ", str)
-	tempStr := str[len(str)-6 : len(str)]
+	tempStr := str[len(str)-6 : len(str)-1]
 	info.Println("tempStr: ", tempStr)
-	i, _ := strconv.ParseInt(tempStr, 10, 64)
+	i, _ := strconv.ParseInt(tempStr, 10, 32)
 	fmt.Printf("%d\n", i)
-	fmt.Println("temp: ", float64(i/1000))
-	return float64(i / 1000)
+	fmt.Println("temp: ", float64(i)/float64(1000))
+	return float64(i) / float64(1000)
 }
 
 func readInputs() (d types.Inputs) {
