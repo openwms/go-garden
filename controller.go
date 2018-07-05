@@ -341,6 +341,7 @@ func main() {
 		writeOutput(newOutput)
 
 		if cnt%thingsSpeakInterval == 0 || !reflect.DeepEqual(newOutput, outputs) {
+			cnt = 0
 			outputs = newOutput
 			sendData(types.Capture{Input: inputs, Output: newOutput})
 		}
