@@ -20,9 +20,10 @@ import (
 )
 
 const (
-	apiURL              = "https://api.thingspeak.com/update.json"
-	apiReadURL          = "https://api.thingspeak.com/channels/507346/feeds.json"
-	thingsSpeakInterval = 120
+	apiURL                  = "https://api.thingspeak.com/update.json"
+	apiReadURL              = "https://api.thingspeak.com/channels/507346/feeds.json"
+	thingsSpeakInterval     = 120
+	maximumWateringInterval = 300
 )
 
 var (
@@ -242,6 +243,7 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 	trace.Println("  Process Inputs")
 
 	var output = types.Outputs{}
+	var delayMainValve time.Time
 	// Fontaine
 	var fontaine = inputs.PumpOn && enoughWaterInFontaine(inputs.FillLevel)
 	if currentOutput.Fontaine != fontaine {
@@ -254,6 +256,10 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 		(timeForWatering() && dryGround(inputs.Wetness))
 	if currentOutput.SprinklerValve != sprinklerValve {
 		info.Println("Switching SprinklerValve: ", boolToStr(sprinklerValve))
+
+		if !sprinklerValve {
+			delayMainValve = time.Now()
+		}
 	}
 	output.SprinklerValve = sprinklerValve
 
@@ -265,7 +271,9 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 	output.FontaineValve = fontaineValve
 
 	// water on the system
-	var mainValve = output.FontaineValve || output.SprinklerValve
+	elapsed := time.Now().Add(-time.Second * 10)
+	info.Println("Duration: ", elapsed, delayMainValve)
+	var mainValve = output.FontaineValve || output.SprinklerValve || delayMainValve.After(elapsed)
 	if currentOutput.MainValve != mainValve {
 		info.Println("Switching MainValve: ", boolToStr(mainValve))
 	}
