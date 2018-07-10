@@ -272,7 +272,7 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 
 	// water on the system
 	elapsed := time.Now().Add(-time.Second * 10)
-	info.Println("Duration: ", elapsed, delayMainValve)
+	info.Println("Duration: ", delayMainValve.After(elapsed), elapsed, delayMainValve)
 	var mainValve = output.FontaineValve || output.SprinklerValve || delayMainValve.After(elapsed)
 	if currentOutput.MainValve != mainValve {
 		info.Println("Switching MainValve: ", boolToStr(mainValve))
