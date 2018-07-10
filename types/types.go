@@ -6,7 +6,7 @@ const FontaineFull = 300
 // DryGround is the treshold that indicates a dry ground. Lower values are more dry than higher values
 const DryGround = 1000
 
-const StartWateringHours1 = 5
+const StartWateringHours1 = 22
 const StartWateringMinutes1 = 10
 const MaxDurationWateringPeriod1 = 300
 

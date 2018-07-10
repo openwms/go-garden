@@ -243,7 +243,6 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 	trace.Println("  Process Inputs")
 
 	var output = types.Outputs{}
-	var delayMainValve time.Time
 	// Fontaine
 	var fontaine = inputs.PumpOn && enoughWaterInFontaine(inputs.FillLevel)
 	if currentOutput.Fontaine != fontaine {
@@ -256,16 +255,8 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 		(timeForWatering() && dryGround(inputs.Wetness))
 	if currentOutput.SprinklerValve != sprinklerValve {
 		info.Println("Switching SprinklerValve: ", boolToStr(sprinklerValve))
-
-		if !sprinklerValve {
-			delayMainValve = time.Now()
-		}
 	}
-	elapsed := time.Now().Add(-time.Second * 10)
-	info.Println("Duration: ", delayMainValve.After(elapsed), elapsed, delayMainValve)
-	if !delayMainValve.After(elapsed) {
-		output.SprinklerValve = sprinklerValve
-	}
+	output.SprinklerValve = sprinklerValve
 
 	// fill fontaine
 	var fontaineValve = !enoughWaterInFontaine(inputs.FillLevel) || inputs.FillFontaineValve
@@ -287,6 +278,7 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 
 func writeOutput(output types.Outputs) {
 	trace.Println("< Write Outputs")
+
 	// Relais 1 // IN 1 // Main Valve
 	if output.MainValve {
 		mainValve.High()
