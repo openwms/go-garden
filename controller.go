@@ -150,9 +150,9 @@ func sendData(capture types.Capture) {
 	trace.Println(resp)
 }
 
-func readVirtualInputs() (pumpOn bool, sprinklerOn bool, fillFontaine bool) {
+func readVirtualInputs(currentOutput types.Outputs) (pumpOn bool, sprinklerOn bool, fillFontaine bool) {
 	trace.Println(">> Read Virtual Inputs")
-	f1 := false
+	f1 := currentOutput.Fontaine
 	f2 := false
 	f3 := false
 
@@ -204,9 +204,9 @@ func readTemperature() (temp float64) {
 	return float64(i) / float64(10)
 }
 
-func readInputs() (d types.Inputs) {
+func readInputs(currentOutput types.Outputs) (d types.Inputs) {
 	trace.Println("> Read Inputs")
-	pumpOn, sprinklerOn, fillFontaineValve = readVirtualInputs()
+	pumpOn, sprinklerOn, fillFontaineValve = readVirtualInputs(currentOutput)
 	res := types.Inputs{
 		Temperature:       readTemperature(),
 		Brightness:        int(brightness.Read()),
@@ -334,7 +334,7 @@ func main() {
 	cnt := 1
 	var outputs = types.Outputs{}
 	for {
-		inputs := readInputs()
+		inputs := readInputs(outputs)
 
 		var newOutput = process(inputs, outputs)
 
