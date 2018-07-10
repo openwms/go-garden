@@ -261,7 +261,11 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 			delayMainValve = time.Now()
 		}
 	}
-	output.SprinklerValve = sprinklerValve
+	elapsed := time.Now().Add(-time.Second * 10)
+	info.Println("Duration: ", delayMainValve.After(elapsed), elapsed, delayMainValve)
+	if !delayMainValve.After(elapsed) {
+		output.SprinklerValve = sprinklerValve
+	}
 
 	// fill fontaine
 	var fontaineValve = !enoughWaterInFontaine(inputs.FillLevel) || inputs.FillFontaineValve
@@ -271,9 +275,7 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 	output.FontaineValve = fontaineValve
 
 	// water on the system
-	elapsed := time.Now().Add(-time.Second * 10)
-	info.Println("Duration: ", delayMainValve.After(elapsed), elapsed, delayMainValve)
-	var mainValve = output.FontaineValve || output.SprinklerValve || delayMainValve.After(elapsed)
+	var mainValve = output.FontaineValve || output.SprinklerValve
 	if currentOutput.MainValve != mainValve {
 		info.Println("Switching MainValve: ", boolToStr(mainValve))
 	}
