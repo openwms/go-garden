@@ -205,6 +205,11 @@ func readTemperature() (temp float64) {
 	return float64(i) / float64(10)
 }
 
+func switchOffSprinkler() {
+	info.Println("Finally switching Sprinkler OFF")
+
+}
+
 func readInputs(currentOutput types.Outputs) (d types.Inputs) {
 	trace.Println("> Read Inputs")
 	pumpOn, sprinklerOn, fillFontaineValve = readVirtualInputs(currentOutput)
@@ -243,6 +248,7 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 	trace.Println("  Process Inputs")
 
 	var output = types.Outputs{}
+	var closeMainValve bool
 	// Fontaine
 	var fontaine = inputs.PumpOn && enoughWaterInFontaine(inputs.FillLevel)
 	if currentOutput.Fontaine != fontaine {
@@ -251,12 +257,22 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 	output.Fontaine = fontaine
 
 	// sprinkler
+	var delaySprinklerValve time.Time
 	var sprinklerValve = inputs.SprinklerOn ||
 		(timeForWatering() && dryGround(inputs.Wetness))
-	if currentOutput.SprinklerValve != sprinklerValve {
+	if currentOutput.SprinklerValve != sprinklerValve &&
+		delaySprinklerValve.Before(time.Now().Add(-time.Second*10)) {
 		info.Println("Switching SprinklerValve: ", boolToStr(sprinklerValve))
+		if !sprinklerValve {
+			// Delay switching off to empty the tube
+			info.Println("Delaying Switch OFF")
+			time.AfterFunc(time.Second*10, switchOffSprinkler)
+		}
 	}
-	output.SprinklerValve = sprinklerValve
+	if delaySprinklerValve.Before(time.Now().Add(-time.Second * 10)) {
+		output.SprinklerValve = sprinklerValve
+		closeMainValve = false
+	}
 
 	// fill fontaine
 	var fontaineValve = !enoughWaterInFontaine(inputs.FillLevel) || inputs.FillFontaineValve
@@ -266,7 +282,7 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 	output.FontaineValve = fontaineValve
 
 	// water on the system
-	var mainValve = output.FontaineValve || output.SprinklerValve
+	var mainValve = (output.FontaineValve || sprinklerValve) && !closeMainValve
 	if currentOutput.MainValve != mainValve {
 		info.Println("Switching MainValve: ", boolToStr(mainValve))
 	}
@@ -280,8 +296,8 @@ func writeOutput(output types.Outputs) {
 	trace.Println("< Write Outputs")
 
 	// Relais 1 // IN 1 // Main Valve
+	mainValve.High()
 	if output.MainValve {
-		mainValve.High()
 		trace.Println("Main valve ON")
 	} else {
 		mainValve.Low()
