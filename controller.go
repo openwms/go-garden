@@ -300,7 +300,7 @@ func writeOutput(output types.Outputs) {
 	if output.MainValve {
 		trace.Println("Main valve ON")
 	} else {
-		mainValve.Low()
+		//mainValve.Low()
 		trace.Println("Main valve OFF")
 	}
 	// Relais 2 // IN 2 // Sprinkler
