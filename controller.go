@@ -205,9 +205,31 @@ func readTemperature() (temp float64) {
 	return float64(i) / float64(10)
 }
 
+func readFillLevel() (temp float64) {
+	var startTime time.Time
+	var stopTime time.Time
+
+	fillLevel.High()
+	time.Sleep(10 * time.Nanosecond)
+	fillLevel.Low()
+
+	for fillLevelEcho == 0 {
+		startTime = time.Now()
+	}
+
+	for fillLevelEcho == 1 {
+		stopTime = time.Now()
+	}
+
+	TimeElapsed := stopTime.Sub(startTime)
+	trace.Println("TimeElapsed: ", TimeElapsed)
+	//distance = TimeElapsed.Seconds * 17150
+	//trace.Println("Distance:", distance)
+	return 0
+}
+
 func switchOffSprinkler() {
 	info.Println("Finally switching Sprinkler OFF")
-
 }
 
 func readInputs(currentOutput types.Outputs) (d types.Inputs) {
@@ -218,7 +240,7 @@ func readInputs(currentOutput types.Outputs) (d types.Inputs) {
 		Brightness:        int(brightness.Read()),
 		Wetness:           int(wetness.Read()),
 		FlowRate:          int(flowRate.Read()),
-		FillLevel:         int(fillLevel.Read()),
+		FillLevel:         int(readFillLevel()),
 		PumpOn:            pumpOn,
 		SprinklerOn:       sprinklerOn,
 		FillFontaineValve: fillFontaineValve}
