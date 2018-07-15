@@ -205,6 +205,36 @@ func readTemperature() (temp float64) {
 	return float64(i) / float64(10)
 }
 
+func checkDistance() float64 {
+	fillLevel.Low()
+	time.Sleep(time.Microsecond * 30)
+	fillLevel.High()
+	time.Sleep(time.Microsecond * 30)
+	fillLevel.Low()
+	time.Sleep(time.Microsecond * 30)
+	for {
+		status := fillLevelEcho.Read()
+		if status == rpio.High {
+			break
+		}
+	}
+	begin := time.Now()
+	for {
+		status := fillLevelEcho.Read()
+		if status == rpio.Low {
+			break
+		}
+	}
+	end := time.Now()
+	diff := end.Sub(begin)
+	//fmt.Println("diff = ",diff.Nanoseconds(),diff.Seconds(),diff.String()) 1496548629.307,501,127
+	result_sec := float64(diff.Nanoseconds()) / 1000000000.0
+	info.Println("result_sec: ", result_sec)
+	info.Println("result_sec2: ", result_sec*340.0/2)
+	//fmt.Println("begin = ", begin.UnixNano(), " end = ", end.UnixNano(), "diff = ", result_sec, diff.Nanoseconds())
+	return result_sec * 340.0 / 2
+}
+
 func readFillLevel() (temp float64) {
 	var startTime = time.Now()
 	var stopTime = time.Now()
@@ -242,7 +272,7 @@ func readInputs(currentOutput types.Outputs) (d types.Inputs) {
 		Brightness:        int(brightness.Read()),
 		Wetness:           int(wetness.Read()),
 		FlowRate:          int(flowRate.Read()),
-		FillLevel:         int(readFillLevel()),
+		FillLevel:         int(checkDistance()),
 		PumpOn:            pumpOn,
 		SprinklerOn:       sprinklerOn,
 		FillFontaineValve: fillFontaineValve}
