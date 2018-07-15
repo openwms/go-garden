@@ -222,7 +222,7 @@ func readFillLevel() (temp float64) {
 	}
 
 	TimeElapsed := stopTime.Sub(startTime)
-	trace.Println("TimeElapsed: ", TimeElapsed)
+	info.Println("TimeElapsed: ", TimeElapsed)
 	//distance = TimeElapsed.Seconds * 17150
 	//trace.Println("Distance:", distance)
 	return 0
