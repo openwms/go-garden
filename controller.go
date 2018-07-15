@@ -206,18 +206,20 @@ func readTemperature() (temp float64) {
 }
 
 func readFillLevel() (temp float64) {
-	var startTime time.Time
-	var stopTime time.Time
+	var startTime = time.Now()
+	var stopTime = time.Now()
 
 	fillLevel.High()
 	time.Sleep(10 * time.Nanosecond)
 	fillLevel.Low()
 
 	for fillLevelEcho == 0 {
+		info.Print('.')
 		startTime = time.Now()
 	}
 
 	for fillLevelEcho == 1 {
+		info.Print(',')
 		stopTime = time.Now()
 	}
 
