@@ -194,6 +194,7 @@ func readDistance() int {
 	var i = 0
 	for i < 1000 {
 		status := fillLevelEcho.Read()
+		info.Println("Comparing")
 		if status == rpio.High {
 			info.Println("Stopping measure")
 			break
