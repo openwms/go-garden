@@ -181,6 +181,8 @@ func readTemperature() (temp float64) {
 	return float64(i) / float64(10)
 }
 
+// 56cm: Distance Ground to sesor
+// 35cm: Maximum possible fill level
 func checkDistance() float64 {
 	fillLevel.Low()
 	time.Sleep(time.Microsecond * 30)
@@ -203,37 +205,10 @@ func checkDistance() float64 {
 	}
 	end := time.Now()
 	diff := end.Sub(begin)
-	//fmt.Println("diff = ",diff.Nanoseconds(),diff.Seconds(),diff.String()) 1496548629.307,501,127
 	result_sec := float64(diff.Nanoseconds()) / 1000000000.0
 	info.Println("result_sec: ", result_sec)
-	info.Println("result_sec2: ", result_sec*340.0/2)
-	//fmt.Println("begin = ", begin.UnixNano(), " end = ", end.UnixNano(), "diff = ", result_sec, diff.Nanoseconds())
-	return result_sec * 340.0 / 2
-}
-
-func readFillLevel() (temp float64) {
-	var startTime = time.Now()
-	var stopTime = time.Now()
-
-	fillLevel.High()
-	time.Sleep(10 * time.Nanosecond)
-	fillLevel.Low()
-
-	for fillLevelEcho == 0 {
-		info.Print('.')
-		startTime = time.Now()
-	}
-
-	for fillLevelEcho == 1 {
-		info.Print(',')
-		stopTime = time.Now()
-	}
-
-	TimeElapsed := stopTime.Sub(startTime)
-	info.Println("TimeElapsed: ", TimeElapsed)
-	//distance = TimeElapsed.Seconds * 17150
-	//trace.Println("Distance:", distance)
-	return 0
+	info.Println("result_sec2: ", result_sec*3.40/2)
+	return result_sec * 3.40 / 2
 }
 
 func switchOffSprinkler() {
