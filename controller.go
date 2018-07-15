@@ -64,7 +64,7 @@ func init() {
 	fmt.Printf("Initializing...\n")
 	//initLoggers(os.Stdout, os.Stdout, os.Stdout, os.Stderr)
 	initLoggers(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
-	//initGpio()
+	initGpio()
 }
 
 func initLoggers(
@@ -91,26 +91,8 @@ func initLoggers(
 }
 
 func initGpio() {
-	fillLevel.Mode(rpio.Pwm)
-	//	fillLevel.Freq(64000)
-	//	fillLevel.DutyCycle(0, 32)
-
-	temperature.Mode(rpio.Pwm)
-	//	temperature.Freq(64000)
-	//	temperature.DutyCycle(0, 32)
-
-	brightness.Mode(rpio.Pwm)
-	//	brightness.Freq(64000)
-	//	brightness.DutyCycle(0, 32)
-
-	wetness.Input()
-	//wetness.Mode(rpio.Pwm)
-	//	wetness.Freq(64000)
-	//	wetness.DutyCycle(0, 32)
-
-	flowRate.Mode(rpio.Pwm)
-	//	flowRate.Freq(64000)
-	//	flowRate.DutyCycle(0, 32)
+	fillLevel.Output()
+	fillLevelEcho.Input()
 }
 
 func boolToa(in bool) string {
