@@ -190,20 +190,20 @@ func readDistance() int {
 	time.Sleep(time.Microsecond * 30)
 	fillLevel.Low()
 	time.Sleep(time.Microsecond * 30)
-	trace.Println("Starting measure")
+	info.Println("Starting measure")
 	for {
 		status := fillLevelEcho.Read()
 		if status == rpio.High {
-			trace.Println("Stopping measure")
+			info.Println("Stopping measure")
 			break
 		}
 	}
 	begin := time.Now()
-	trace.Println("Starting measure 2")
+	info.Println("Starting measure 2")
 	for {
 		status := fillLevelEcho.Read()
 		if status == rpio.Low {
-			trace.Println("Stopping measure 2")
+			info.Println("Stopping measure 2")
 			break
 		}
 	}
