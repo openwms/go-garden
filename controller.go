@@ -198,7 +198,7 @@ func readDistance() int {
 		}
 		i++
 	}
-	info.Println("i = ", i)
+	trace.Println("i = ", i)
 	i = 0
 	begin := time.Now()
 	for i < 1000 {
