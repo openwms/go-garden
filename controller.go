@@ -181,9 +181,9 @@ func readTemperature() (temp float64) {
 	return float64(i) / float64(10)
 }
 
-// 56cm: Distance Ground to sesor
+// 56cm: Distance Ground to sensor
 // 35cm: Maximum possible fill level
-func checkDistance() float64 {
+func readDistance() float64 {
 	fillLevel.Low()
 	time.Sleep(time.Microsecond * 30)
 	fillLevel.High()
@@ -206,7 +206,7 @@ func checkDistance() float64 {
 	end := time.Now()
 	diff := end.Sub(begin)
 	timeDiff := float64(diff.Nanoseconds()) / 1000000000.0
-	return 100 * (timeDiff * 340.0 / 2)
+	return 56 - (100 * (timeDiff * 340.0 / 2))
 }
 
 func switchOffSprinkler() {
@@ -221,7 +221,7 @@ func readInputs(currentOutput types.Outputs) (d types.Inputs) {
 		Brightness:        int(brightness.Read()),
 		Wetness:           int(wetness.Read()),
 		FlowRate:          int(flowRate.Read()),
-		FillLevel:         int(checkDistance()),
+		FillLevel:         int(readDistance()),
 		PumpOn:            pumpOn,
 		SprinklerOn:       sprinklerOn,
 		FillFontaineValve: fillFontaineValve}
