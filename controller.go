@@ -181,7 +181,7 @@ func readTemperature() (temp float64) {
 	return float64(i) / float64(10)
 }
 
-// 56cm: Distance Ground to sensor
+// 51cm: Distance Ground to sensor
 // 35cm: Maximum possible fill level
 func readDistance() int {
 	fillLevel.Low()
@@ -206,7 +206,7 @@ func readDistance() int {
 	end := time.Now()
 	diff := end.Sub(begin)
 	timeDiff := float64(diff.Nanoseconds()) / 1000000000.0
-	return 56 - int((100 * (timeDiff * 340.0 / 2)))
+	return 51 - int((100 * (timeDiff * 340.0 / 2)))
 }
 
 func switchOffSprinkler() {
