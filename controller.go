@@ -205,10 +205,8 @@ func checkDistance() float64 {
 	}
 	end := time.Now()
 	diff := end.Sub(begin)
-	result_sec := float64(diff.Nanoseconds()) / 1000000000.0
-	info.Println("result_sec: ", result_sec)
-	info.Println("result_sec2: ", (result_sec*340.0/2)*100)
-	return 100 * (result_sec * 340.0 / 2)
+	timeDiff := float64(diff.Nanoseconds()) / 1000000000.0
+	return 100 * (timeDiff * 340.0 / 2)
 }
 
 func switchOffSprinkler() {
