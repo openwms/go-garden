@@ -190,16 +190,13 @@ func readDistance() int {
 	time.Sleep(time.Microsecond * 30)
 	fillLevel.Low()
 	time.Sleep(time.Microsecond * 30)
-	info.Println("Starting measure")
 	var i = 0
 	for i < 100 {
 		status := fillLevelEcho.Read()
-		info.Println("Comparing", i)
 		if status == rpio.High {
-			info.Println("Stopping measure")
 			break
 		}
-		i += 1
+		i++
 	}
 	info.Println("i = ", i)
 	i = 0
@@ -209,7 +206,7 @@ func readDistance() int {
 		if status == rpio.Low {
 			break
 		}
-		i += 1
+		i++
 	}
 	end := time.Now()
 	diff := end.Sub(begin)
