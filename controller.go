@@ -200,6 +200,7 @@ func readDistance() int {
 		}
 		i += i
 	}
+	info.Println("i = ", i)
 	i = 0
 	begin := time.Now()
 	info.Println("Starting measure 2")
@@ -212,6 +213,7 @@ func readDistance() int {
 		i += i
 	}
 	end := time.Now()
+	info.Println("i2 = ", i)
 	diff := end.Sub(begin)
 	timeDiff := float64(diff.Nanoseconds()) / 1000000000.0
 	return 51 - int((100 * (timeDiff * 340.0 / 2)))
