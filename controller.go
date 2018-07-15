@@ -64,7 +64,6 @@ func init() {
 	fmt.Printf("Initializing...\n")
 	//initLoggers(os.Stdout, os.Stdout, os.Stdout, os.Stderr)
 	initLoggers(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
-	initGpio()
 }
 
 func initLoggers(
@@ -88,11 +87,6 @@ func initLoggers(
 	error = log.New(errorHandle,
 		"ERROR: ",
 		log.Ldate|log.Ltime|log.Lshortfile)
-}
-
-func initGpio() {
-	fillLevel.Output()
-	fillLevelEcho.Input()
 }
 
 func boolToa(in bool) string {
@@ -373,6 +367,8 @@ func initializePins() {
 	pump.Output()
 	ledLights.Output()
 	sprinkler.Output()
+	fillLevel.Output()
+	fillLevelEcho.Input()
 }
 
 func main() {
