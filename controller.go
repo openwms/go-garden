@@ -240,8 +240,14 @@ func enoughWaterInFontaine(fillLevel int) bool {
 
 func timeForWatering() bool {
 	hour, min, _ := time.Now().Clock()
-	res := (hour == types.StartWateringHours1 && min == types.StartWateringMinutes1) ||
-		(hour == types.StartWateringHours2 && min == types.StartWateringMinutes2)
+	minutes := int(maximumWateringInterval / 60)
+	res :=
+		(hour == types.StartWateringHours1 &&
+			min >= types.StartWateringMinutes1 &&
+			min < types.StartWateringMinutes1+minutes) ||
+			(hour == types.StartWateringHours2 &&
+				min >= types.StartWateringMinutes2 &&
+				min < types.StartWateringMinutes2)
 	if res {
 		info.Println("Time for watering ", hour, ":", min)
 	}
