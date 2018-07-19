@@ -7,10 +7,10 @@ const FontaineFull = 300
 const DryGround = 1000
 
 const StartWateringHours1 = 22
-const StartWateringMinutes1 = 20
+const StartWateringMinutes1 = 10
 const MaxDurationWateringPeriod1 = 300
 
-const StartWateringHours2 = 23
+const StartWateringHours2 = 6
 const StartWateringMinutes2 = 10
 const MaxDurationWateringPeriod2 = 300
 
