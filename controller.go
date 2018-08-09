@@ -207,6 +207,7 @@ func readDistance() int {
 	}
 	timeDiff := end.Sub(begin).Nanoseconds() / 1000000000.0
 	// https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi
+	info.Println("Filllevel: ", 52-int(timeDiff*34300/2), " cm")
 	return 52 - int(timeDiff*34300/2)
 }
 
