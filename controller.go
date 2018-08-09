@@ -191,7 +191,7 @@ func readDistance() int {
 	fillLevel.Low()
 	time.Sleep(time.Second * 2)
 	fillLevel.High()
-	time.Sleep(time.Microsecond * 10)
+	time.Sleep(time.Microsecond * 30)
 	fillLevel.Low()
 	begin = time.Now()
 	for i < 1000000 {
