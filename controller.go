@@ -185,34 +185,29 @@ func readTemperature() (temp float64) {
 // 35cm: Maximum possible fill level
 func readDistance() int {
 	fillLevel.Low()
+	// warmin up
 	time.Sleep(time.Second * 2)
 	fillLevel.High()
 	time.Sleep(time.Microsecond * 10)
 	fillLevel.Low()
-	var i = 0
 	begin := time.Now()
-	for i < 1000 {
-		status := fillLevelEcho.Read()
-		if status == rpio.High {
+	for i := 0; i < 1000; i++ {
+		if fillLevelEcho.Read() == rpio.High {
 			break
 		}
+		// take the latest timepoint
 		begin = time.Now()
-		i++
 	}
-	i = 0
 	end := time.Now()
-	for i < 1000 {
-		status := fillLevelEcho.Read()
-		if status == rpio.Low {
+	for i := 0; i < 1000; i++ {
+		if fillLevelEcho.Read() == rpio.Low {
 			break
 		}
 		end = time.Now()
-		i++
 	}
-	diff := end.Sub(begin)
-	timeDiff := float64(diff.Nanoseconds()) / 1000000000.0
+	timeDiff := end.Sub(begin).Nanoseconds() / 1000000000.0
 	// https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi
-	return 52 - int(timeDiff*34300.0/2)
+	return 52 - int(timeDiff*34300/2)
 }
 
 func switchOffSprinkler() {
