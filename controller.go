@@ -255,6 +255,11 @@ func timeForWatering() bool {
 	return res
 }
 
+func isDaylight() bool {
+	hour := time.Now().Hour()
+	return hour >= types.FountainStartHour && hour <= types.FountainStopHour
+}
+
 func dryGround(wetness int) bool {
 	return wetness < types.DryGround
 }
@@ -265,9 +270,9 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 	var output = types.Outputs{}
 	var closeMainValve bool
 	// Fontaine
-	var fontaine = inputs.PumpOn && enoughWaterInFontaine(inputs.FillLevel)
+	var fontaine = inputs.PumpOn && enoughWaterInFontaine(inputs.FillLevel) && isDaylight()
 	if currentOutput.Fontaine != fontaine {
-		info.Println("Switching Fontaine: ", boolToStr(fontaine))
+		info.Println("Switching Fontaine: ", boolToStr(fontaine), isDaylight())
 	}
 	output.Fontaine = fontaine
 
