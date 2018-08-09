@@ -185,33 +185,36 @@ func readTemperature() (temp float64) {
 // 35cm: Maximum possible fill level
 func readDistance() int {
 	fillLevel.Low()
-	time.Sleep(time.Microsecond * 30)
+	time.Sleep(time.Second * 2)
 	fillLevel.High()
-	time.Sleep(time.Microsecond * 30)
+	time.Sleep(time.Microsecond * 10)
 	fillLevel.Low()
-	time.Sleep(time.Microsecond * 30)
 	var i = 0
+	begin := time.Now()
 	for i < 1000 {
 		status := fillLevelEcho.Read()
 		if status == rpio.High {
 			break
 		}
+		begin = time.Now()
 		i++
 	}
-	trace.Println("i = ", i)
+	info.Println("i = ", i)
 	i = 0
-	begin := time.Now()
+	end := time.Now()
 	for i < 1000 {
 		status := fillLevelEcho.Read()
 		if status == rpio.Low {
 			break
 		}
+		end = time.Now()
 		i++
 	}
-	end := time.Now()
 	diff := end.Sub(begin)
+	info.Println("diff = ", diff)
 	timeDiff := float64(diff.Nanoseconds()) / 1000000000.0
-	return 51 - int((100 * (timeDiff * 340.0 / 2)))
+	info.Println("timeDiff = ", timeDiff, " cm ", 52-int(timeDiff*34300.0/2))
+	return 52 - int(timeDiff*34300.0/2)
 }
 
 func switchOffSprinkler() {
@@ -272,7 +275,7 @@ func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Ou
 	// Fontaine
 	var fontaine = inputs.PumpOn && enoughWaterInFontaine(inputs.FillLevel) && isDaylight()
 	if currentOutput.Fontaine != fontaine {
-		info.Println("Switching Fontaine: ", boolToStr(fontaine), isDaylight())
+		info.Println("Switching Fontaine: ", boolToStr(fontaine), ", is it day? ", isDaylight())
 	}
 	output.Fontaine = fontaine
 
