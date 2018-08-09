@@ -189,8 +189,9 @@ func readDistance() int {
 	fillLevel.High()
 	time.Sleep(time.Microsecond * 10)
 	fillLevel.Low()
+	i := 0
 	begin := time.Now()
-	for i := 0; i < 1000; i++ {
+	for i < 1000 {
 		status := fillLevelEcho.Read()
 		if status == rpio.High {
 			break
@@ -199,12 +200,14 @@ func readDistance() int {
 		i++
 	}
 	end := time.Now()
-	for i := 0; i < 1000; i++ {
+	i = 0
+	for i < 1000 {
 		status := fillLevelEcho.Read()
 		if status == rpio.Low {
 			break
 		}
 		end = time.Now()
+		i++
 	}
 	diff := end.Sub(begin)
 	timeDiff := float64(diff.Nanoseconds()) / 1000000000.0
