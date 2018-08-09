@@ -193,7 +193,6 @@ func readDistance() int {
 	fillLevel.High()
 	time.Sleep(time.Microsecond * 30)
 	fillLevel.Low()
-	time.Sleep(time.Microsecond * 30)
 	begin = time.Now()
 	for {
 		status = fillLevelEcho.Read()
