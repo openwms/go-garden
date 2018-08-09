@@ -189,7 +189,7 @@ func readDistance() int {
 	fillLevel.High()
 	time.Sleep(time.Microsecond * 10)
 	fillLevel.Low()
-	i := 0
+	var i = 0
 	begin := time.Now()
 	for i < 1000 {
 		status := fillLevelEcho.Read()
@@ -199,8 +199,9 @@ func readDistance() int {
 		begin = time.Now()
 		i++
 	}
-	end := time.Now()
+	info.Println("i = ", i)
 	i = 0
+	end := time.Now()
 	for i < 1000 {
 		status := fillLevelEcho.Read()
 		if status == rpio.Low {
@@ -210,8 +211,8 @@ func readDistance() int {
 		i++
 	}
 	diff := end.Sub(begin)
+	info.Println("diff = ", diff)
 	timeDiff := float64(diff.Nanoseconds()) / 1000000000.0
-	// https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi
 	info.Println("timeDiff = ", timeDiff, " cm ", 52-int(timeDiff*34300.0/2))
 	return 52 - int(timeDiff*34300.0/2)
 }
