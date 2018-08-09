@@ -184,15 +184,18 @@ func readTemperature() (temp float64) {
 // 51cm: Distance Ground to sensor
 // 35cm: Maximum possible fill level
 func readDistance() int {
+	var i = 0
+	var begin time.Time
+	var end time.Time
+	var status rpio.State
 	fillLevel.Low()
 	time.Sleep(time.Second * 2)
 	fillLevel.High()
 	time.Sleep(time.Microsecond * 10)
 	fillLevel.Low()
-	var i = 0
-	begin := time.Now()
-	for i < 10000 {
-		status := fillLevelEcho.Read()
+	begin = time.Now()
+	for i < 1000000 {
+		status = fillLevelEcho.Read()
 		if status == rpio.High {
 			break
 		}
@@ -201,15 +204,16 @@ func readDistance() int {
 	}
 	info.Println("i = ", i)
 	i = 0
-	end := time.Now()
-	for i < 10000 {
-		status := fillLevelEcho.Read()
+	end = time.Now()
+	for i < 100000 {
+		status = fillLevelEcho.Read()
 		if status == rpio.Low {
 			break
 		}
 		end = time.Now()
 		i++
 	}
+	info.Println("i2 = ", i)
 	diff := end.Sub(begin)
 	info.Println("diff = ", diff)
 	timeDiff := float64(diff.Nanoseconds()) / 1000000000.0
