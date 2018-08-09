@@ -188,9 +188,13 @@ func readDistance() int {
 	var begin time.Time
 	var end time.Time
 	var status rpio.State
+	info.Println(fillLevelEcho.Read())
 	fillLevel.Low()
+	info.Println(fillLevelEcho.Read())
 	time.Sleep(time.Second * 2)
+	info.Println(fillLevelEcho.Read())
 	fillLevel.High()
+	info.Println(fillLevelEcho.Read())
 	time.Sleep(time.Microsecond * 10)
 	fillLevel.Low()
 	for {
