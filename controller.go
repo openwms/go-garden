@@ -189,14 +189,14 @@ func readDistance() int {
 	var end time.Time
 	var status rpio.State
 	fillLevel.Low()
-	time.Sleep(time.Second * 2)
+	time.Sleep(time.Microsecond * 30)
 	fillLevel.High()
-	time.Sleep(time.Microsecond * 10)
+	time.Sleep(time.Microsecond * 30)
 	fillLevel.Low()
+	time.Sleep(time.Microsecond * 30)
 	begin = time.Now()
 	for {
 		status = fillLevelEcho.Read()
-		info.Print("Status ", status)
 		if status == rpio.High {
 			break
 		}
