@@ -15,7 +15,7 @@ const StartWateringMinutes2 = 10
 const MaxDurationWateringPeriod2 = 300
 
 const FountainStartHour = 8
-const FountainStopHour = 22
+const FountainStopHour = 21
 
 // Capture defines the data set send to ThingsSpeak
 type Capture struct {
