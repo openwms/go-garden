@@ -221,7 +221,7 @@ func readDistance() int {
 	diff := end.Sub(begin)
 	info.Println("diff = ", diff)
 	timeDiff := float64(diff.Nanoseconds()) / 1000000000.0
-	info.Println("timeDiff = ", timeDiff, " cm ", 52-int(timeDiff*34300.0/2))
+	info.Println("timeDiff = ", timeDiff, " cm ", int(timeDiff*34300.0/2))
 	// https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi
 	return 52 - int(timeDiff*34300.0/2)
 }
