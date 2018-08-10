@@ -184,49 +184,46 @@ func readTemperature() (temp float64) {
 // 51cm: Distance Ground to sensor
 // 35cm: Maximum possible fill level
 func readDistance() int {
-	/*
-		var i = 0
-		var begin time.Time
-		var end time.Time
-		var status rpio.State
-		info.Println(fillLevelEcho.Read())
-		fillLevel.Low()
-		info.Println(fillLevelEcho.Read())
-		time.Sleep(time.Second * 2)
-		info.Println(fillLevelEcho.Read())
-		fillLevel.High()
-		info.Println(fillLevelEcho.Read())
-		time.Sleep(time.Microsecond * 10)
-		fillLevel.Low()
-		for {
-			status = fillLevelEcho.Read()
-			if status == rpio.High {
-				break
-			}
-			//		begin = time.Now()
-			//		i++
+	var i = 0
+	var begin time.Time
+	var end time.Time
+	var status rpio.State
+	info.Println(fillLevelEcho.Read())
+	fillLevel.Low()
+	info.Println(fillLevelEcho.Read())
+	time.Sleep(time.Second * 2)
+	info.Println(fillLevelEcho.Read())
+	fillLevel.High()
+	info.Println(fillLevelEcho.Read())
+	time.Sleep(time.Microsecond * 10)
+	fillLevel.Low()
+	for {
+		status = fillLevelEcho.Read()
+		if status == rpio.High {
+			break
 		}
-		begin = time.Now()
-		info.Println("i = ", i)
-		i = 0
+		//		begin = time.Now()
+		//		i++
+	}
+	begin = time.Now()
+	info.Println("i = ", i)
+	i = 0
+	end = time.Now()
+	for {
+		status = fillLevelEcho.Read()
+		if status == rpio.Low {
+			break
+		}
 		end = time.Now()
-		for {
-			status = fillLevelEcho.Read()
-			if status == rpio.Low {
-				break
-			}
-			end = time.Now()
-			i++
-		}
-		info.Println("i2 = ", i)
-		diff := end.Sub(begin)
-		info.Println("diff = ", diff)
-		timeDiff := float64(diff.Nanoseconds()) / 1000000000.0
-		info.Println("timeDiff = ", timeDiff, " cm ", 52-int(timeDiff*34300.0/2))
-		// https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi
-		return 52 - int(timeDiff*34300.0/2)
-	*/
-	return 52
+		i++
+	}
+	info.Println("i2 = ", i)
+	diff := end.Sub(begin)
+	info.Println("diff = ", diff)
+	timeDiff := float64(diff.Nanoseconds()) / 1000000000.0
+	info.Println("timeDiff = ", timeDiff, " cm ", 52-int(timeDiff*34300.0/2))
+	// https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi
+	return 52 - int(timeDiff*34300.0/2)
 }
 
 func switchOffSprinkler() {
