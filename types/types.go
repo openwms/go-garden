@@ -3,7 +3,7 @@ package types
 // FontaineFull is the threshold in millimeter from sonic sensor to water surface. Lower values indicate the fontain holds a higher level of water
 const FontaineFull = 300
 
-// DryGround is the treshold that indicates a dry ground. Lower values are more dry than higher values
+// DryGround is the treshold that indicates the ground is to dry and needs to be watered. Lower values are more dry than higher values
 const DryGround = 1000
 
 const StartWateringHours1 = 22
