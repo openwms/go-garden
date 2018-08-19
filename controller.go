@@ -202,7 +202,6 @@ func readDistance() int {
 		i++
 	}
 	begin = time.Now()
-	info.Println("i = ", i)
 	i = 0
 	end = time.Now()
 	for i < 2000 {
@@ -213,11 +212,9 @@ func readDistance() int {
 		end = time.Now()
 		i++
 	}
-	info.Println("i2 = ", i)
 	diff := end.Sub(begin)
-	info.Println("diff = ", diff)
 	timeDiff := float64(diff.Nanoseconds()) / 1000000000.0
-	info.Println("timeDiff = ", timeDiff, " cm ", int(timeDiff*34300.0/2))
+	trace.Println("timeDiff = ", timeDiff, " cm ", int(timeDiff*34300.0/2))
 	// https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi
 	return 52 - int(timeDiff*34300.0/2)
 }
