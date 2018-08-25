@@ -266,7 +266,7 @@ func isDaylight() bool {
 }
 
 func dryGround(wetness int) bool {
-	return wetness < types.DryGround
+	return false //wetness < types.DryGround
 }
 
 func process(inputs types.Inputs, currentOutput types.Outputs) (outputs types.Outputs) {
