@@ -1,5 +1,10 @@
 package main
 
+// cd src/github.com/openwms/go-garden
+// git pull origin master
+// go install github.com/openwms/go-garden
+// go-garden
+
 import (
 	"context"
 	"encoding/json"
@@ -172,13 +177,15 @@ func readVirtualInputs(currentOutput types.Outputs) (pumpOn bool, sprinklerOn bo
 func readTemperature() (temp float64) {
 	dat, e := ioutil.ReadFile("/sys/bus/w1/devices/28-0417501596ff/w1_slave")
 	if e != nil {
-		panic(e)
+		warning.Println("No temperature sensor connected")
+		return -255
 	}
 	str := string(dat)
-	tempStr := str[len(str)-6 : len(str)-3]
-	trace.Println("tempStr: ", tempStr)
-	i, _ := strconv.ParseInt(tempStr, 10, 32)
-	return float64(i) / float64(10)
+	tempStr := str[strings.LastIndex(str, "=")+1 : len(str)-1]
+	trace.Println("Read temperature string: ", tempStr)
+	i, _ := strconv.ParseInt(tempStr, 10, 64)
+	result := float64(i) / float64(1000)
+	return result
 }
 
 // 51cm: Distance Ground to sensor
