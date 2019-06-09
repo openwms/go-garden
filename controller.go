@@ -110,7 +110,7 @@ func boolToStr(in bool) string {
 
 // Send the data c to the ThingSpeak API
 func sendData(capture types.Capture) {
-	trace.Println(">> Send Data", capture)
+	info.Println(">> Send Data", capture)
 
 	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)
 	data := url.Values{}
@@ -127,7 +127,7 @@ func sendData(capture types.Capture) {
 	req.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 
 	req = req.WithContext(ctx)
-	trace.Println(">> Send Request", req)
+	info.Println(">> Send Request", req)
 	resp, _ := http.DefaultClient.Do(req)
 	trace.Println(resp)
 }
