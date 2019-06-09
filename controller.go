@@ -128,7 +128,10 @@ func sendData(capture types.Capture) {
 
 	req = req.WithContext(ctx)
 	info.Println(">> Send Request", req)
-	resp, _ := http.DefaultClient.Do(req)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		error.Println("Error sending data: ", err)
+	}
 	trace.Println(resp)
 }
 
