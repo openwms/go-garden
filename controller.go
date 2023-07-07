@@ -58,7 +58,7 @@ var (
 	sprinkler    = rpio.Pin(27) //IN2
 	fillFountain = rpio.Pin(22) //IN3
 	pump         = rpio.Pin(23) //IN4
-	ledLights    = rpio.Pin(24) //IN5
+	ledLights    = rpio.Pin(24) //IN6
 
 	// Virtual Outputs
 	errorFillingFountain = false
